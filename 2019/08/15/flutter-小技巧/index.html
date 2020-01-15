@@ -195,19 +195,20 @@
         <h3 class="title is-5 has-text-weight-normal">评论</h3>
         
 <div id="comment-container"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
 <script>
-	var gitment = new Gitment({
-		id: '9224f60840619d0eb239e4a79876aed9',
-		owner: 'NanShanJi',
-		repo: 'nanshanji.github.io',
-		oauth: {
-			client_id: '26f18e9586a067f2ec69',
-			client_secret: '2d0f56d9b138192437a066d2ba6f10bd89fe2029',
-		},
-	})
-	gitment.render('comment-container')
+    var gitalk = new Gitalk({
+        clientID: '26f18e9586a067f2ec69',
+        clientSecret: '2d0f56d9b138192437a066d2ba6f10bd89fe2029',
+        id: '9224f60840619d0eb239e4a79876aed9',
+        repo: 'nanshanji.github.io',
+        owner: 'NanShanJi',
+        admin: "NanShanJi",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
 </script>
 
     </div>
