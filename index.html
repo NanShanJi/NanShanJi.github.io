@@ -132,7 +132,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 2 个字)
+                    1 分钟 读完 (大约 218 个字)
                 </span>
                 
                 
@@ -145,7 +145,16 @@
             
         </h1>
         <div class="content">
-            <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2>
+            <h2 id="语法篇"><a href="#语法篇" class="headerlink" title="语法篇"></a>语法篇</h2><h3 id="空值处理"><a href="#空值处理" class="headerlink" title="空值处理"></a>空值处理</h3><p>如果一个变量为空时，则进行赋值操作</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 title 等于 null 则 title = 'Title' </span></span><br><span class="line"><span class="keyword">if</span> (title == <span class="keyword">null</span>) &#123;</span><br><span class="line">  title = <span class="string">"Title"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">title ??= <span class="string">"Title"</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="var-和-dynamic-的区别"><a href="#var-和-dynamic-的区别" class="headerlink" title="var 和 dynamic 的区别"></a>var 和 dynamic 的区别</h3><ul>
+<li><code>var</code> 实际上就是个“语法糖”。在<code>Dart</code>编译的时候会自动推导出数据的类型。</li>
+<li><code>dynamic</code> 表示一个动态的类型，被编译后，实际是一个<code>object</code>类型，在编译期间不进行任何的类型检测，而是在运行期间进行类型检测。</li>
+</ul>
+<h2 id="编辑器"><a href="#编辑器" class="headerlink" title="编辑器"></a>编辑器</h2><h3 id="快速创建-StatelessWidget"><a href="#快速创建-StatelessWidget" class="headerlink" title="快速创建 StatelessWidget"></a>快速创建 StatelessWidget</h3><p>在编辑器中输入<code>stless</code>就可以快速创建一个<code>StatelessWidget</code>。<br><img src="https://i.loli.net/2020/01/15/P1cIGFtJmQAgZeS.gif" alt="stless操作演示"></p>
+<h3 id="快速创建-StatefulWidget"><a href="#快速创建-StatefulWidget" class="headerlink" title="快速创建 StatefulWidget"></a>快速创建 StatefulWidget</h3><p>在编辑器中输入<code>stful</code>就可以快速创建一个<code>StatefulWidget</code><br><img src="https://i.loli.net/2020/01/15/LqU9BD3Prl5ZHc7.gif" alt="stful操作演示"></p>
+
         </div>
         
         
