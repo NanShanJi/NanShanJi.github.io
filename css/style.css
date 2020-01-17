@@ -229,6 +229,9 @@ img.thumbnail {
 .article .content a {
   word-wrap: break-word;
 }
+.article .reprint {
+  padding-bottom: 20px;
+}
 .rtl {
   direction: rtl;
 }
