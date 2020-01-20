@@ -132,7 +132,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1245 个字)
+                    8 分钟 读完 (大约 1246 个字)
                 </span>
                 
                 
@@ -152,80 +152,16 @@
         </h1>
         <div class="content">
             <p>GitHub 的服务器同步的时候太慢了也有可能会彻底访问不了，为了不影响日常工作开发，决定在公司服务器上搭建一个 <code>Git</code> 服务端，并记录下来全过程。<br>本文服务端环境为 <code>CentOS7</code>(3.10.0-957.21.3.el7.x86_64)  </p>
-<h2 id="安装-Git-服务端"><a href="#安装-Git-服务端" class="headerlink" title="安装 Git 服务端"></a>安装 Git 服务端</h2><p><strong>以下命令在服务器里运行</strong></p>
-<h3 id="查看-Git-版本"><a href="#查看-Git-版本" class="headerlink" title="查看 Git 版本"></a>查看 Git 版本</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum info git</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> git version 1.8.3.1</span></span><br></pre></td></tr></table></figure>
-<p>可以看到，到目前为止(2020年01月20日)，<code>yum</code> 的 <code>Git</code> 版本才 <code>1.8.3.1</code>，而最新的已经 <code>2.9.2</code> 了。</p>
-<h3 id="更新-Git"><a href="#更新-Git" class="headerlink" title="更新 Git"></a>更新 Git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 依赖库安装</span></span><br><span class="line">yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel</span><br><span class="line">yum install gcc perl-ExtUtils-MakeMaker</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 卸载低版本的 Git</span></span><br><span class="line">yum remove git</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载新版的 Git 源码包（/usr/<span class="built_in">local</span>/git）</span></span><br><span class="line">cd /usr/local/git</span><br><span class="line">wget https://github.com/git/git/archive/v2.9.2.tar.gz</span><br><span class="line">tar -xzvf v2.9.2.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>执行以下命令进行编译和安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 如果有下载最新版，请按照最新版文件夹名</span></span><br><span class="line">cd git-2.9.2</span><br><span class="line"></span><br><span class="line">make prefix=/usr/local/git all</span><br><span class="line">make prefix=/usr/local/git install</span><br></pre></td></tr></table></figure>
-
-<p>添加到环境变量</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
-<p>添加上这一条 <code>export PATH=&quot;/usr/local/git/bin:$PATH&quot;</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 使环境变量立即生效</span></span><br><span class="line">source /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看版本号</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
-
-<p>将 <code>Git</code> 设为默认路径，避免克隆的时候报错</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/git/bin/git-upload-pack /usr/bin/git-upload-pack </span><br><span class="line">ln -s /usr/local/git/bin/git-receive-pack /usr/bin/git-receive-pack</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建-Git-用户"><a href="#创建-Git-用户" class="headerlink" title="创建 Git 用户"></a>创建 Git 用户</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd git</span><br><span class="line">password *******</span><br></pre></td></tr></table></figure>
-
-<p>禁止 Git 用户使用 Shell 登录系统（为了服务器安全）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/passwd</span><br></pre></td></tr></table></figure>
-
-<p>在最后一行将 <code>git</code> 用户修改成一下配置并保存</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git:x:1000:1000::/home/git:/usr/bin/git-shell</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置远程仓库"><a href="#配置远程仓库" class="headerlink" title="配置远程仓库"></a>配置远程仓库</h2><h3 id="创建一个空仓库"><a href="#创建一个空仓库" class="headerlink" title="创建一个空仓库"></a>创建一个空仓库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /home</span><br><span class="line">mkdir git</span><br><span class="line">cd git</span><br><span class="line">git init --bare blog.git</span><br></pre></td></tr></table></figure>
-<p>执行完毕后会创建一个空仓库，仓库的路径为：/home/git/blog.git</p>
-<h3 id="为-Git-用户赋予仓库的文件权限"><a href="#为-Git-用户赋予仓库的文件权限" class="headerlink" title="为 Git 用户赋予仓库的文件权限"></a>为 Git 用户赋予仓库的文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R git:git /home/git/blog.git</span><br></pre></td></tr></table></figure>
-
-<h3 id="打开-RSA-认证"><a href="#打开-RSA-认证" class="headerlink" title="打开 RSA 认证"></a>打开 RSA 认证</h3><p>编辑 <code>/etc/ssh/sshd_config</code> 文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
-
-<p>找到以下三项，并关闭注释。如果没找到相应项，直接补全就好。<br>注：vim 模式下向下搜索 <code>/搜索的内容</code>，向上搜索 <code>?搜索的内容</code>  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RSAAuthentication yes</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line">AuthorizedKeysFile .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-
-<p>保存完毕后重启 <code>sshd</code> 服务</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/etc/rc.d/init.d/sshd restart</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果上面的命令出现错误可以尝试使用下面的</span></span><br><span class="line">service sshd restart</span><br></pre></td></tr></table></figure>
-<p>打完收工！Git 的服务端配置完毕。</p>
-<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><p><strong>以下命令在客户端里运行</strong></p>
-<h3 id="创建-Git-的使用者"><a href="#创建-Git-的使用者" class="headerlink" title="创建 Git 的使用者"></a>创建 Git 的使用者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name "NanSHanJi"</span><br><span class="line">git config --global user.email "coder.htt@gmail.com"</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建和服务器通信的秘钥"><a href="#创建和服务器通信的秘钥" class="headerlink" title="创建和服务器通信的秘钥"></a>创建和服务器通信的秘钥</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "coder.htt@gmail.com"</span><br></pre></td></tr></table></figure>
-<p>一路回车下去就好了，完成后会输出秘钥的路径，进入秘钥的文件夹<br><img src="https://i.loli.net/2020/01/20/kJNeZxyac6rp8Im.png" alt="秘钥文件目录"><br><code>id_rsa</code> 是秘钥，打死也不要告诉别人，<code>id_rsa.pub</code>是公钥，可以公开。</p>
-<h3 id="将公钥添加到服务器中"><a href="#将公钥添加到服务器中" class="headerlink" title="将公钥添加到服务器中"></a>将公钥添加到服务器中</h3><h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><ol>
-<li>直接打开文件 <code>id_rsa.pub</code> 复制里面的内容。</li>
-<li>然后粘贴到服务器 <code>~/.ssh/authorized_keys</code> 文件里。</li>
-</ol>
-<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh git@172.168.162.40 'cat &gt;&gt; .ssh/authorized_keys' &lt; 你的文件路径/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<h2 id="克隆远程仓库到本地"><a href="#克隆远程仓库到本地" class="headerlink" title="克隆远程仓库到本地"></a>克隆远程仓库到本地</h2><p><strong>以下命令在客户端里运行</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 找一个文件夹，执行以下命令</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> x.x.x.x 是服务器 ip 地址</span></span><br><span class="line">git clone git@x.x.x.x:/home/git/blog.git</span><br></pre></td></tr></table></figure>
-
-<h3 id="push-pull-项目"><a href="#push-pull-项目" class="headerlink" title="push/pull 项目"></a>push/pull 项目</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在本地的 blog 文件夹中随便弄点文件进去</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m 初始化项目</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
-
-<p><strong>以下命令在服务端里运行</strong><br>进入服务器查看远程仓库 commit 记录，如果看到有记录就算成功了</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /home/git/blog.git</span><br><span class="line">git log</span><br></pre></td></tr></table></figure>
-<p>注：如果没有成功，可以检查下是否防火墙没有开放 <code>22</code> 端口，或者 <code>SSH</code> 不在 <code>22</code> 端口上，如果不在 <code>22</code> 端口上，克隆的时候需要改下地址</p>
-<blockquote>
-<p>git clone ssh://git@x.x.x.x:端口/home/git/LearnProject.git</p>
-</blockquote>
-<h2 id="Git-HOOK-自动部署代码"><a href="#Git-HOOK-自动部署代码" class="headerlink" title="Git HOOK 自动部署代码"></a>Git HOOK 自动部署代码</h2><blockquote>
-<p>在服务器 /home/git/blog.git 文件夹里是不能直接看到我门提交的代码<br>所以需要我们把项目 clone 到一个地方</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /data/wwwwroot</span><br><span class="line">git clone /home/git/blog.git</span><br></pre></td></tr></table></figure>
-<p>后面的自动部署都会基于这个文件夹</p>
-<h3 id="设置-HOOK"><a href="#设置-HOOK" class="headerlink" title="设置 HOOK"></a>设置 HOOK</h3><p>仓库每次被 <code>push</code> 的时候会触发这个 <code>post-receive</code> 这个文件里的脚本内容  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /home/git/blog.git/hooks</span><br><span class="line"></span><br><span class="line">cp post-update.sample post-receive</span><br><span class="line">vim post-receive</span><br></pre></td></tr></table></figure>
-
-<p>在 <code>post-receive</code> 里面输入代码自动部署的操作流程  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unset GIT_DIR</span><br><span class="line">cd /var/www/blog</span><br><span class="line">git pull --allow-unrelated-histories</span><br></pre></td></tr></table></figure>
-<p><code>第一行代码至关重要</code> Git 的 hooks 里面默认有一些环境变量，会导致无论在哪个语句之后执行git命令都会有一个默认的环境路径，所以需要 <code>unset</code> 掉默认的 <code>GIT</code> 环境变量。</p>
-<p>到此，整个搭建流程都完成了</p>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/01/20/%E6%90%AD%E5%BB%BAGit%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E4%BD%BF%E7%94%A8HOOK%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
