@@ -142,7 +142,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1230 个字)
+                    8 分钟 读完 (大约 1245 个字)
                 </span>
                 
                 
@@ -161,9 +161,7 @@
             
         </h1>
         <div class="content">
-            <blockquote>
-<p>GitHub 同步有点慢有时候可能会彻底访问不了，为了不影响日常工作开发，决定在公司服务器上搭建一个<code>Git</code>服务端，本文服务端环境为<code>CentOS7</code>(3.10.0-957.21.3.el7.x86_64)</p>
-</blockquote>
+            <p>GitHub 的服务器同步的时候太慢了也有可能会彻底访问不了，为了不影响日常工作开发，决定在公司服务器上搭建一个 <code>Git</code> 服务端，并记录下来全过程。<br>本文服务端环境为 <code>CentOS7</code>(3.10.0-957.21.3.el7.x86_64)  </p>
 <h2 id="安装-Git-服务端"><a href="#安装-Git-服务端" class="headerlink" title="安装 Git 服务端"></a>安装 Git 服务端</h2><p><strong>以下命令在服务器里运行</strong></p>
 <h3 id="查看-Git-版本"><a href="#查看-Git-版本" class="headerlink" title="查看 Git 版本"></a>查看 Git 版本</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum info git</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> git version 1.8.3.1</span></span><br></pre></td></tr></table></figure>
 <p>可以看到，到目前为止(2020年01月20日)，<code>yum</code> 的 <code>Git</code> 版本才 <code>1.8.3.1</code>，而最新的已经 <code>2.9.2</code> 了。</p>
