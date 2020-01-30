@@ -19,7 +19,7 @@
 <meta property="og:description" content="GitHub 的服务器同步的时候太慢了也有可能会彻底访问不了，为了不影响日常工作开发，决定在公司服务器上搭建一个 Git 服务端，并记录下来全过程。本文服务端环境为 CentOS7(3.10.0-957.21.3.el7.x86_64)">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
-<meta property="og:updated_time" content="2020-01-20T06:21:28.715Z">
+<meta property="og:updated_time" content="2020-01-30T06:16:09.963Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
 
@@ -138,7 +138,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1246 个字)
+                    8 分钟 读完 (大约 1261 个字)
                 </span>
                 
                 
@@ -206,7 +206,7 @@
 <li>直接打开文件 <code>id_rsa.pub</code> 复制里面的内容。</li>
 <li>然后粘贴到服务器 <code>~/.ssh/authorized_keys</code> 文件里。</li>
 </ol>
-<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh git@172.168.162.40 'cat &gt;&gt; .ssh/authorized_keys' &lt; 你的文件路径/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> x.x.x.x 是服务器 ip 地址</span></span><br><span class="line">ssh git@x.x.x.x 'cat &gt;&gt; .ssh/authorized_keys' &lt; 你的文件路径/id_rsa.pub</span><br></pre></td></tr></table></figure>
 
 <h2 id="克隆远程仓库到本地"><a href="#克隆远程仓库到本地" class="headerlink" title="克隆远程仓库到本地"></a>克隆远程仓库到本地</h2><p><strong>以下命令在客户端里运行</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 找一个文件夹，执行以下命令</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> x.x.x.x 是服务器 ip 地址</span></span><br><span class="line">git clone git@x.x.x.x:/home/git/blog.git</span><br></pre></td></tr></table></figure>
