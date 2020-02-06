@@ -146,7 +146,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 499 个字)
+                    3 分钟 读完 (大约 524 个字)
                 </span>
                 
                 
@@ -165,12 +165,7 @@
             
         </h1>
         <div class="content">
-            <h2 id="语法篇"><a href="#语法篇" class="headerlink" title="语法篇"></a>语法篇</h2><h3 id="空值处理"><a href="#空值处理" class="headerlink" title="空值处理"></a>空值处理</h3><p>如果一个变量为空时，则进行赋值操作</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 title 等于 null 则 title = 'Title' </span></span><br><span class="line"><span class="keyword">if</span> (title == <span class="keyword">null</span>) &#123;</span><br><span class="line">  title = <span class="string">"Title"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">title ??= <span class="string">"Title"</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="判断对象属性是否可以调用"><a href="#判断对象属性是否可以调用" class="headerlink" title="判断对象属性是否可以调用"></a>判断对象属性是否可以调用</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 url 等于 null 则不会调用 search 方法</span></span><br><span class="line">url &amp;&amp; url.search()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">url?.search()</span><br></pre></td></tr></table></figure>
-
-<h3 id="var-和-dynamic-的区别"><a href="#var-和-dynamic-的区别" class="headerlink" title="var 和 dynamic 的区别"></a>var 和 dynamic 的区别</h3><ul>
+            <h2 id="语法篇"><a href="#语法篇" class="headerlink" title="语法篇"></a>语法篇</h2><h3 id="var-和-dynamic-的区别"><a href="#var-和-dynamic-的区别" class="headerlink" title="var 和 dynamic 的区别"></a>var 和 dynamic 的区别</h3><ul>
 <li><code>var</code> 实际上就是个“语法糖”。在<code>Dart</code>编译的时候会自动推导出数据的类型。</li>
 <li><code>dynamic</code> 表示一个动态的类型，被编译后，实际是一个<code>object</code>类型，在编译期间不进行任何的类型检测，而是在运行期间进行类型检测。</li>
 </ul>

@@ -10,16 +10,16 @@
 <title>flutter 小技巧 - NanShanJi 的博客</title>
 
 
-    <meta name="description" content="语法篇空值处理如果一个变量为空时，则进行赋值操作 1234567&#x2F;&#x2F; 如果 title 等于 null 则 title = &amp;apos;Title&amp;apos; if (title == null) &amp;#123;  title = &quot;Title&quot;;&amp;#125;&#x2F;&#x2F; 和上面的效果一样title ??= &quot;Title&quot;;  判断对象属性是否可以调用12345&#x2F;&#x2F; 如果 url 等于 null 则不会调用 search 方法">
+    <meta name="description" content="语法篇var 和 dynamic 的区别 var 实际上就是个“语法糖”。在Dart编译的时候会自动推导出数据的类型。 dynamic 表示一个动态的类型，被编译后，实际是一个object类型，在编译期间不进行任何的类型检测，而是在运行期间进行类型检测。">
 <meta name="keywords" content="Flutter,技巧,Dart">
 <meta property="og:type" content="article">
 <meta property="og:title" content="flutter 小技巧">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;08&#x2F;15&#x2F;flutter-%E5%B0%8F%E6%8A%80%E5%B7%A7&#x2F;index.html">
 <meta property="og:site_name" content="NanShanJi 的博客">
-<meta property="og:description" content="语法篇空值处理如果一个变量为空时，则进行赋值操作 1234567&#x2F;&#x2F; 如果 title 等于 null 则 title = &amp;apos;Title&amp;apos; if (title == null) &amp;#123;  title = &quot;Title&quot;;&amp;#125;&#x2F;&#x2F; 和上面的效果一样title ??= &quot;Title&quot;;  判断对象属性是否可以调用12345&#x2F;&#x2F; 如果 url 等于 null 则不会调用 search 方法">
+<meta property="og:description" content="语法篇var 和 dynamic 的区别 var 实际上就是个“语法糖”。在Dart编译的时候会自动推导出数据的类型。 dynamic 表示一个动态的类型，被编译后，实际是一个object类型，在编译期间不进行任何的类型检测，而是在运行期间进行类型检测。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
-<meta property="og:updated_time" content="2020-01-16T10:03:42.509Z">
+<meta property="og:updated_time" content="2020-02-06T08:30:53.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
 
@@ -138,7 +138,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 499 个字)
+                    3 分钟 读完 (大约 524 个字)
                 </span>
                 
                 
@@ -157,16 +157,15 @@
             
         </h1>
         <div class="content">
-            <h2 id="语法篇"><a href="#语法篇" class="headerlink" title="语法篇"></a>语法篇</h2><h3 id="空值处理"><a href="#空值处理" class="headerlink" title="空值处理"></a>空值处理</h3><p>如果一个变量为空时，则进行赋值操作</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 title 等于 null 则 title = 'Title' </span></span><br><span class="line"><span class="keyword">if</span> (title == <span class="keyword">null</span>) &#123;</span><br><span class="line">  title = <span class="string">"Title"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">title ??= <span class="string">"Title"</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="判断对象属性是否可以调用"><a href="#判断对象属性是否可以调用" class="headerlink" title="判断对象属性是否可以调用"></a>判断对象属性是否可以调用</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 url 等于 null 则不会调用 search 方法</span></span><br><span class="line">url &amp;&amp; url.search()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">url?.search()</span><br></pre></td></tr></table></figure>
-
-<h3 id="var-和-dynamic-的区别"><a href="#var-和-dynamic-的区别" class="headerlink" title="var 和 dynamic 的区别"></a>var 和 dynamic 的区别</h3><ul>
+            <h2 id="语法篇"><a href="#语法篇" class="headerlink" title="语法篇"></a>语法篇</h2><h3 id="var-和-dynamic-的区别"><a href="#var-和-dynamic-的区别" class="headerlink" title="var 和 dynamic 的区别"></a>var 和 dynamic 的区别</h3><ul>
 <li><code>var</code> 实际上就是个“语法糖”。在<code>Dart</code>编译的时候会自动推导出数据的类型。</li>
 <li><code>dynamic</code> 表示一个动态的类型，被编译后，实际是一个<code>object</code>类型，在编译期间不进行任何的类型检测，而是在运行期间进行类型检测。</li>
 </ul>
 <a id="more"></a>
+<h3 id="空值处理"><a href="#空值处理" class="headerlink" title="空值处理"></a>空值处理</h3><p>如果一个变量为空时，则进行赋值操作</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 title 等于 null 则 title = 'Title' </span></span><br><span class="line"><span class="keyword">if</span> (title == <span class="keyword">null</span>) &#123;</span><br><span class="line">  title = <span class="string">"Title"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">title ??= <span class="string">"Title"</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="判断对象属性是否可以调用"><a href="#判断对象属性是否可以调用" class="headerlink" title="判断对象属性是否可以调用"></a>判断对象属性是否可以调用</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果 url 等于 null 则不会调用 search 方法</span></span><br><span class="line">url &amp;&amp; url.search()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 和上面的效果一样</span></span><br><span class="line">url?.search()</span><br></pre></td></tr></table></figure>
 
 <h2 id="编辑器"><a href="#编辑器" class="headerlink" title="编辑器"></a>编辑器</h2><h3 id="快速创建-StatelessWidget"><a href="#快速创建-StatelessWidget" class="headerlink" title="快速创建 StatelessWidget"></a>快速创建 StatelessWidget</h3><p>在编辑器中输入<code>stless</code>就可以快速创建一个<code>StatelessWidget</code>。<br><img src="https://i.loli.net/2020/01/15/P1cIGFtJmQAgZeS.gif" alt="stless操作演示"></p>
 <h3 id="快速创建-StatefulWidget"><a href="#快速创建-StatefulWidget" class="headerlink" title="快速创建 StatefulWidget"></a>快速创建 StatefulWidget</h3><p>在编辑器中输入<code>stful</code>就可以快速创建一个<code>StatefulWidget</code><br><img src="https://i.loli.net/2020/01/15/LqU9BD3Prl5ZHc7.gif" alt="stful操作演示"></p>
@@ -178,8 +177,11 @@
 <p><img src="https://i.loli.net/2020/01/15/PEM9rDcluixkOY6.gif" alt="布局查看器操作演示"></p>
 <h3 id="JSON-转-Model"><a href="#JSON-转-Model" class="headerlink" title="JSON 转 Model"></a>JSON 转 Model</h3><p>尝试了各种自动化的方法把 <code>JSON</code> 转换成 <code>Model</code>，网页版的呢太麻烦了，每次都要打开网页才行。  所以就从<code>AndroidStudio</code>的<code>Plugins</code>下手，试用了10个插件，最终选用<code>Json2Dart</code>，它生成的代码比较简洁，也比较符合当前开发的规范。<br><img src="https://i.loli.net/2020/01/16/Z5Dfyc7pGXPmS3B.png" alt="插件列表"></p>
 <p>操作演示<br><img src="https://i.loli.net/2020/01/16/oOnFbEfmHQrAhg8.gif" alt="JsonToDart操作演示"></p>
-<h3 id="Flutter-自带的图标库"><a href="#Flutter-自带的图标库" class="headerlink" title="Flutter 自带的图标库"></a>Flutter 自带的图标库</h3><p><code>Flutter</code> 的图标库是来自 <code>Material design</code> 。  </p>
+<h3 id="快速重写方法"><a href="#快速重写方法" class="headerlink" title="快速重写方法"></a>快速重写方法</h3><p>Mac <code>control + o</code><br>Windows <code>ctrl + o</code>(没试过，只是根据Mac端转义过来的)</p>
+<h2 id="Flutter-资源相关"><a href="#Flutter-资源相关" class="headerlink" title="Flutter 资源相关"></a>Flutter 资源相关</h2><p><code>Flutter</code> 的图标库是来自 <code>Material design</code> 。  </p>
 <a href="/2020/01/16/flutter-%E6%89%80%E6%9C%89%E8%87%AA%E5%B8%A6%E5%9B%BE%E6%A0%87/" title="点击访问 flutter-所有自带图标">点击访问 flutter-所有自带图标</a>  
+
+
 
         </div>
         
