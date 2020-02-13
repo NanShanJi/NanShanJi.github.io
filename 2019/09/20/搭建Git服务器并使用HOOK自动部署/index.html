@@ -14,12 +14,12 @@
 <meta name="keywords" content="Git,服务器,HOOK,自动部署">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建Git服务器并使用HOOK自动部署">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;20&#x2F;%E6%90%AD%E5%BB%BAGit%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E4%BD%BF%E7%94%A8HOOK%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2&#x2F;index.html">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;09&#x2F;20&#x2F;%E6%90%AD%E5%BB%BAGit%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E4%BD%BF%E7%94%A8HOOK%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2&#x2F;index.html">
 <meta property="og:site_name" content="NanShanJi 的博客">
 <meta property="og:description" content="GitHub 的服务器同步的时候太慢了也有可能会彻底访问不了，为了不影响日常工作开发，决定在公司服务器上搭建一个 Git 服务端，并记录下来全过程。本文服务端环境为 CentOS7(3.10.0-957.21.3.el7.x86_64)">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
-<meta property="og:updated_time" content="2020-01-30T06:16:09.963Z">
+<meta property="og:updated_time" content="2020-02-13T01:07:51.370Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
 
@@ -128,7 +128,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-01-20T02:17:59.000Z">2020-01-20</time>
+                <time class="level-item has-text-grey" datetime="2019-09-20T02:17:59.000Z">2019-09-20</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a>
@@ -162,7 +162,7 @@
 
 <h2 id="安装-Git-服务端"><a href="#安装-Git-服务端" class="headerlink" title="安装 Git 服务端"></a>安装 Git 服务端</h2><p><strong>以下命令在服务器里运行</strong></p>
 <h3 id="查看-Git-版本"><a href="#查看-Git-版本" class="headerlink" title="查看 Git 版本"></a>查看 Git 版本</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum info git</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> git version 1.8.3.1</span></span><br></pre></td></tr></table></figure>
-<p>可以看到，到目前为止(2020年01月20日)，<code>yum</code> 的 <code>Git</code> 版本才 <code>1.8.3.1</code>，而最新的已经 <code>2.9.2</code> 了。</p>
+<p>可以看到，到目前为止(2019年09月20日)，<code>yum</code> 的 <code>Git</code> 版本才 <code>1.8.3.1</code>，而最新的已经 <code>2.9.2</code> 了。</p>
 <h3 id="更新-Git"><a href="#更新-Git" class="headerlink" title="更新 Git"></a>更新 Git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 依赖库安装</span></span><br><span class="line">yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel</span><br><span class="line">yum install gcc perl-ExtUtils-MakeMaker</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 卸载低版本的 Git</span></span><br><span class="line">yum remove git</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载新版的 Git 源码包（/usr/<span class="built_in">local</span>/git）</span></span><br><span class="line">cd /usr/local/git</span><br><span class="line">wget https://github.com/git/git/archive/v2.9.2.tar.gz</span><br><span class="line">tar -xzvf v2.9.2.tar.gz</span><br></pre></td></tr></table></figure>
 
 <p>执行以下命令进行编译和安装</p>
@@ -284,19 +284,12 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/02/11/Flutter-JsonToDart-%E5%B7%A5%E5%85%B7/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/01/15/flutter-%E5%B0%8F%E6%8A%80%E5%B7%A7/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Flutter JsonToDart 工具</span>
+                <span class="level-item">flutter 小技巧</span>
             </a>
         </div>
         
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/01/16/flutter-%E6%89%80%E6%9C%89%E8%87%AA%E5%B8%A6%E5%9B%BE%E6%A0%87/">
-                <span class="level-item">flutter 所有自带图标</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
         
     </div>
 </div>
@@ -314,7 +307,7 @@
     var gitalk = new Gitalk({
         clientID: '26f18e9586a067f2ec69',
         clientSecret: '2d0f56d9b138192437a066d2ba6f10bd89fe2029',
-        id: 'cc283f7b5ea86ce189215841f7a1c0d6',
+        id: 'bce1255885193c440aec553f6276d01f',
         repo: 'nanshanji.github.io',
         owner: 'NanShanJi',
         admin: "NanShanJi",
