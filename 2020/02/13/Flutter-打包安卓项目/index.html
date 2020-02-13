@@ -11,7 +11,7 @@
 
 
     <meta name="description" content="为什么要生成签名文件 应用程序升级：只有用同一个证书进行签名，安卓系统才会允许安装升级的应用程序。如果采用了不同的证书签名，那么安卓系统会要求你的应用程序采用不同的包名称，这样就相当于安装了一个全新的应用。如果想要升级应用包名和证书签名都必须完全一致。 应用程序模块化：Android系统可以允许同一个证书签名的多个应用程序在一个进程里运行，系统实际把他们作为一个单个的应用程序，此时就可以把我们的应">
-<meta name="keywords" content="Flutter,Dart,设计,图标">
+<meta name="keywords" content="设计,图标,Flutter,Dart">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flutter 打包安卓项目">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;13&#x2F;Flutter-%E6%89%93%E5%8C%85%E5%AE%89%E5%8D%93%E9%A1%B9%E7%9B%AE&#x2F;index.html">
@@ -19,7 +19,7 @@
 <meta property="og:description" content="为什么要生成签名文件 应用程序升级：只有用同一个证书进行签名，安卓系统才会允许安装升级的应用程序。如果采用了不同的证书签名，那么安卓系统会要求你的应用程序采用不同的包名称，这样就相当于安装了一个全新的应用。如果想要升级应用包名和证书签名都必须完全一致。 应用程序模块化：Android系统可以允许同一个证书签名的多个应用程序在一个进程里运行，系统实际把他们作为一个单个的应用程序，此时就可以把我们的应">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
-<meta property="og:updated_time" content="2020-02-13T03:19:20.188Z">
+<meta property="og:updated_time" content="2020-02-13T03:21:21.948Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
 
@@ -160,9 +160,11 @@
             <h2 id="为什么要生成签名文件"><a href="#为什么要生成签名文件" class="headerlink" title="为什么要生成签名文件"></a>为什么要生成签名文件</h2><ol>
 <li>应用程序升级：只有用同一个证书进行签名，安卓系统才会允许安装升级的应用程序。如果采用了不同的证书签名，那么安卓系统会要求你的应用程序采用不同的包名称，这样就相当于安装了一个全新的应用。如果想要升级应用包名和证书签名都必须完全一致。</li>
 <li>应用程序模块化：Android系统可以允许同一个证书签名的多个应用程序在一个进程里运行，系统实际把他们作为一个单个的应用程序，此时就可以把我们的应用程序以模块的方式进行部署，而用户可以独立的升级其中的一个模块</li>
-<li>代码或者数据共享：Android提供了基于签名的权限机制，那么一个应用程序就可以为另一个以相同证书签名的应用程序公开自己的功能。以同一个证书对多个应用程序进行签名，利用基于签名的权限检查，你就可以在应用程序间以安全的方式共享代码和数据了。不同的应用程序之间，想共享数据，或者共享代码，那么要让他们运行在同一个进程中，而且要让他们用相同的证书签名。<a id="more"></a>
-<h2 id="生成签名文件"><a href="#生成签名文件" class="headerlink" title="生成签名文件"></a>生成签名文件</h2>做前端开发的朋友电脑上一般都没有安装过 <code>JavaJDK</code> 在生成签名文件前先进行安装 <code>JavaJDK</code>，因为生成工具是 <code>JavaJDK</code> 提供的。  </li>
+<li>代码或者数据共享：Android提供了基于签名的权限机制，那么一个应用程序就可以为另一个以相同证书签名的应用程序公开自己的功能。以同一个证书对多个应用程序进行签名，利用基于签名的权限检查，你就可以在应用程序间以安全的方式共享代码和数据了。不同的应用程序之间，想共享数据，或者共享代码，那么要让他们运行在同一个进程中，而且要让他们用相同的证书签名。  <a id="more"></a>
+
+</li>
 </ol>
+<h2 id="生成签名文件"><a href="#生成签名文件" class="headerlink" title="生成签名文件"></a>生成签名文件</h2><p>做前端开发的朋友电脑上一般都没有安装过 <code>JavaJDK</code> 在生成签名文件前先进行安装 <code>JavaJDK</code>，因为生成工具是 <code>JavaJDK</code> 提供的。  </p>
 <blockquote>
 <p>官网下载： <a href="https://www.oracle.com/java/technologies/javase-jdk13-downloads.html">https://www.oracle.com/java/technologies/javase-jdk13-downloads.html</a>  </p>
 <p>华为镜像站(推荐)： <a href="https://repo.huaweicloud.com/java/jdk/">https://repo.huaweicloud.com/java/jdk/</a></p>
