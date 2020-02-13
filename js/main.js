@@ -176,4 +176,11 @@
             link.target = '_blank';
         });
     }
+
+    // 导航栏的镜像地址
+    if (location.hostname !== 'nanshanji.github.io') {
+        console.dir(document.querySelector('div.navbar-start > a:nth-child(5)'))
+        document.querySelector('div.navbar-start > a:nth-child(5)').style.display = 'none'
+
+    }
 })(jQuery);
