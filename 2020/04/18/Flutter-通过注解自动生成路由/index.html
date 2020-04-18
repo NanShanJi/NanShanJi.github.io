@@ -10,16 +10,16 @@
 <title>Flutter-通过注解自动生成路由 - NanShanJi 的博客</title>
 
 
-    <meta name="description" content="在使用Flutter业务开发的时由于业务比较复杂，涉及到的页面太多，到目前为止已经有100+页面。所以需要一个轻量级的路由框架来管理路由。本文基于dart注解机制实现。在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。下面主要记录下自己所学。">
+    <meta name="description" content="在使用Flutter开发业务时由于业务比较复杂，涉及到的页面太多，到目前为止已经有100+页面。所以需要一个轻量级的路由框架来管理路由。本文基于dart注解机制实现。在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。">
 <meta name="keywords" content="Flutter,技巧,Dart">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flutter-通过注解自动生成路由">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;04&#x2F;18&#x2F;Flutter-%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E8%B7%AF%E7%94%B1&#x2F;index.html">
 <meta property="og:site_name" content="NanShanJi 的博客">
-<meta property="og:description" content="在使用Flutter业务开发的时由于业务比较复杂，涉及到的页面太多，到目前为止已经有100+页面。所以需要一个轻量级的路由框架来管理路由。本文基于dart注解机制实现。在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。下面主要记录下自己所学。">
+<meta property="og:description" content="在使用Flutter开发业务时由于业务比较复杂，涉及到的页面太多，到目前为止已经有100+页面。所以需要一个轻量级的路由框架来管理路由。本文基于dart注解机制实现。在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
-<meta property="og:updated_time" content="2020-04-18T08:59:06.219Z">
+<meta property="og:updated_time" content="2020-04-18T09:01:34.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
 
@@ -145,7 +145,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    14 分钟 读完 (大约 2055 个字)
+                    14 分钟 读完 (大约 2042 个字)
                 </span>
                 
                 
@@ -164,7 +164,7 @@
             
         </h1>
         <div class="content">
-            <p>在使用<code>Flutter</code>业务开发的时由于业务比较复杂，涉及到的页面太多，到目前为止已经有<code>100+</code>页面。所以需要一个轻量级的路由框架来管理路由。本文基于<code>dart</code>注解机制实现。<br>在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。<br>下面主要记录下自己所学。</p>
+            <p>在使用<code>Flutter</code>开发业务时由于业务比较复杂，涉及到的页面太多，到目前为止已经有<code>100+</code>页面。所以需要一个轻量级的路由框架来管理路由。本文基于<code>dart</code>注解机制实现。<br>在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。  </p>
 <a id="more"></a>
 
 <h2 id="原来的路由结构"><a href="#原来的路由结构" class="headerlink" title="原来的路由结构"></a>原来的路由结构</h2><h3 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Examples</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> id;</span><br><span class="line">  <span class="keyword">final</span> name;</span><br><span class="line">  Examples(<span class="keyword">this</span>.id, <span class="keyword">this</span>.name&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Text(<span class="string">"<span class="subst">$this</span>.id, <span class="subst">$this</span>.name"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -208,7 +208,7 @@
 <p>如果生成的的文件和结果不一致，建议先清除构建文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner clean</span><br></pre></td></tr></table></figure>
 
-<p><strong><code>上面的代码是我们的项目有深度关联，并不一定适配其他项目，仅做记录作用</code></strong><br>参考文章：<a href="https://juejin.im/post/5d1ac884f265da1bad571f3a#heading-8">掘金：Flutter 注解处理及代码生成</a></p>
+<p><strong><code>上面的代码和我们的项目有深度依赖，并不一定适配其他项目，仅做记录作用</code></strong><br>参考文章：<a href="https://juejin.im/post/5d1ac884f265da1bad571f3a#heading-8">掘金：Flutter 注解处理及代码生成</a></p>
 
         </div>
         
