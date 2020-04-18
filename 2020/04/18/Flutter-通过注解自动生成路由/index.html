@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.0.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Flutter-通过注解自动生成路由 - NanShanJi 的博客</title>
+
+
+    <meta name="description" content="在使用Flutter业务开发的时由于业务比较复杂，涉及到的页面太多，到目前为止已经有100+页面。所以需要一个轻量级的路由框架来管理路由。本文基于dart注解机制实现。在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。下面主要记录下自己所学。">
+<meta name="keywords" content="Flutter,技巧,Dart">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter-通过注解自动生成路由">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;04&#x2F;18&#x2F;Flutter-%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E8%B7%AF%E7%94%B1&#x2F;index.html">
+<meta property="og:site_name" content="NanShanJi 的博客">
+<meta property="og:description" content="在使用Flutter业务开发的时由于业务比较复杂，涉及到的页面太多，到目前为止已经有100+页面。所以需要一个轻量级的路由框架来管理路由。本文基于dart注解机制实现。在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。下面主要记录下自己所学。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
+<meta property="og:updated_time" content="2020-04-18T08:59:06.219Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="https://github.githubassets.com/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"> -->
+<link rel="stylesheet" href="/css/fontawesome.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">首页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="http://www.htt.ink">国内镜像站</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="GitHub" href="https://github.com/NanShanJi">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="Email" href="mailto:mx@htt.ink">
+                        
+                        <i class="fas fa-envelope"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-18T07:28:13.000Z">2020-04-18</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Flutter/">Flutter</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分钟 读完 (大约 2055 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        <div class="reprint">
+            <span class="icon has-text-info">
+                <i class="fas fa-info-circle"></i>
+            </span>
+            转载请注明出处
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Flutter-通过注解自动生成路由
+            
+        </h1>
+        <div class="content">
+            <p>在使用<code>Flutter</code>业务开发的时由于业务比较复杂，涉及到的页面太多，到目前为止已经有<code>100+</code>页面。所以需要一个轻量级的路由框架来管理路由。本文基于<code>dart</code>注解机制实现。<br>在开始前 Google 了很多相关的解决方案，但是由于项目已经开发到后期页面过多，使用其他框架侵入式太严重需要修改大量代码以适配，遂放弃使用现有的框架。<br>下面主要记录下自己所学。</p>
+<a id="more"></a>
+
+<h2 id="原来的路由结构"><a href="#原来的路由结构" class="headerlink" title="原来的路由结构"></a>原来的路由结构</h2><h3 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Examples</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> id;</span><br><span class="line">  <span class="keyword">final</span> name;</span><br><span class="line">  Examples(<span class="keyword">this</span>.id, <span class="keyword">this</span>.name&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Text(<span class="string">"<span class="subst">$this</span>.id, <span class="subst">$this</span>.name"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="路由表-手动维护"><a href="#路由表-手动维护" class="headerlink" title="路由表(手动维护)"></a>路由表(手动维护)</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RouteName</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> NotFount = <span class="string">'notFount'</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> Examples = <span class="string">'examples'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Router</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> Route&lt;<span class="built_in">dynamic</span>&gt; generateRoute(RouteSettings settings) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (settings.name) &#123;</span><br><span class="line">      <span class="keyword">case</span> RouteName.Examples:</span><br><span class="line">        <span class="keyword">return</span> Examples();</span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> NotFount();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="调用方法"><a href="#调用方法" class="headerlink" title="调用方法"></a>调用方法</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamed(context, RouteName.Examples);</span><br><span class="line"></span><br><span class="line">Navigator.of(context).push(<span class="keyword">new</span> MaterialPageRoute(builder: (_) &#123;</span><br><span class="line">  <span class="keyword">return</span> Examples(<span class="number">1</span>, <span class="string">"哎嘿嘿"</span>);</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+<p>这样做的弊端有很多：</p>
+<ol>
+<li>每个路由都需要单独手动添加，每次维护映射管理时都需要补全 Switch 分支和定义路由名。</li>
+<li>传参的时候不够明显，没有语法提示，在<code>调用</code>和<code>传参</code>的时候，不能很明确的知道对方需要什么参数。</li>
+</ol>
+<h2 id="通过注解实现"><a href="#通过注解实现" class="headerlink" title="通过注解实现"></a>通过注解实现</h2><h3 id="页面-1"><a href="#页面-1" class="headerlink" title="页面"></a>页面</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HtPage</span>(</span><br><span class="line">  params: [<span class="string">'int:id'</span>, <span class="string">'String:name'</span>]</span><br><span class="line">)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Examples</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  ExamplesParams params;</span><br><span class="line">  Examples(&#123;<span class="keyword">this</span>.params&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Text(<span class="string">"<span class="subst">$this</span>.params.id, <span class="subst">$this</span>.params.name"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="路由表-自动生成"><a href="#路由表-自动生成" class="headerlink" title="路由表(自动生成)"></a>路由表(自动生成)</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RouteName</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> NotFount = <span class="string">'notFount'</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> Examples = <span class="string">'examples'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExamplesParams</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int</span> id;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> name;</span><br><span class="line">  ExamplesParams(&#123;<span class="keyword">this</span>.id, <span class="keyword">this</span>.name&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Router</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> Route&lt;<span class="built_in">dynamic</span>&gt; generateRoute(RouteSettings settings) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (settings.name) &#123;</span><br><span class="line">      <span class="keyword">case</span> RouteName.Examples:</span><br><span class="line">        <span class="keyword">return</span> Examples(params: settings.arguments);</span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> NotFount();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="调用方法-1"><a href="#调用方法-1" class="headerlink" title="调用方法"></a>调用方法</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamed(context, RouteName.Examples, arguments: ExamplesParams(</span><br><span class="line">  id: <span class="number">1</span>,</span><br><span class="line">  name: <span class="string">"哎嘿嘿"</span></span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+
+<h2 id="注解的实现"><a href="#注解的实现" class="headerlink" title="注解的实现"></a>注解的实现</h2><p>注解，实际上是代码级的一段配置，它可以作用于编译时或是运行时，由于目前flutter不支持运行时的反射功能，我们需要在编译期就能获取到注解的相关信息，通过这些信息来生成一个自动维护的映射表。那我们要做的，就是在编译时通过分析dart文件的语法结构，找到文件内的注解块和注解的相关内容，对注解内容进行收集，最后生成我们想要的映射表.</p>
+<h3 id="新建一个Flutter包"><a href="#新建一个Flutter包" class="headerlink" title="新建一个Flutter包"></a>新建一个<code>Flutter包</code></h3><p>首先先建立个<code>Flutter</code>的包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create --template=package ht_router</span><br></pre></td></tr></table></figure>
+<p>创建成功之后，需要在项目里面加入两个包文件，注解依赖的。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pubspec.yaml</span></span><br><span class="line"><span class="attr">dependencies:</span></span><br><span class="line">  <span class="attr">flutter:</span></span><br><span class="line">    <span class="attr">sdk:</span> <span class="string">flutter</span></span><br><span class="line">  <span class="comment"># 加入的包</span></span><br><span class="line">  <span class="attr">source_gen:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dev_dependencies:</span></span><br><span class="line">  <span class="attr">flutter_test:</span></span><br><span class="line">    <span class="attr">sdk:</span> <span class="string">flutter</span></span><br><span class="line">  <span class="comment"># 加入的包</span></span><br><span class="line">  <span class="attr">build_runner:</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="建立注解类"><a href="#建立注解类" class="headerlink" title="建立注解类"></a>建立注解类</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="markdown">路由动画名</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtRouterAnimation</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> PageRouteNoAnimBuilder = <span class="string">"PageRouteNoAnimBuilder"</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> PageRouteFadeBuilder = <span class="string">"PageRouteFadeBuilder"</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">String</span> PageRouteSlideDirection = <span class="string">"PageRouteSlideBuilder"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="markdown">路由页面的注解类</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtPage</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> animation;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; params;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> HtPage(&#123;<span class="keyword">this</span>.params, <span class="keyword">this</span>.animation = HtRouterAnimation.PageRouteSlideDirection,&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="markdown">定义router文件注解类</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtRouter</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> HtRouter();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很简单的几行代码，这步就完成了。由于<code>dart</code>的注解机制是，一个注解类包只能生成一个文件且一个注解类只能处理一种注解标识，这里使用的是 <code>HtRouter</code> 来生成文件，前面的 <code>HtPage</code> 是用来处理并缓存没个注解的(这后面会有代码展示)。</p>
+<h3 id="代码模板库用于生成最终的代码字符串-generate-code-template-dart"><a href="#代码模板库用于生成最终的代码字符串-generate-code-template-dart" class="headerlink" title="代码模板库用于生成最终的代码字符串(generate_code_template.dart)"></a>代码模板库用于生成最终的代码字符串(generate_code_template.dart)</h3><p>一会都会被替换成实际代码，实际上就和平时写代码差不多，只不过变成生成字符串了。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenerateCodeTemplate</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; routeNames;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;&gt; params;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; importList;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt; animationList;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> packageName;</span><br><span class="line"></span><br><span class="line">  GenerateCodeTemplate(&#123;<span class="keyword">this</span>.packageName,<span class="keyword">this</span>.animationList,<span class="keyword">this</span>.routeNames, <span class="keyword">this</span>.params, <span class="keyword">this</span>.importList&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">String</span> code () &#123;</span><br><span class="line">    <span class="built_in">String</span> routeNames = _genRouteNames(<span class="keyword">this</span>.routeNames);</span><br><span class="line">    <span class="built_in">String</span> paramsClass = _genParamClass(<span class="keyword">this</span>.params);</span><br><span class="line">    <span class="built_in">String</span> routeCases = _genRouteCases(<span class="keyword">this</span>.animationList, params);</span><br><span class="line">    <span class="built_in">String</span> imports = _genImports(<span class="keyword">this</span>.importList);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"""</span></span><br><span class="line"><span class="string">    import 'package:flutter/cupertino.dart';</span></span><br><span class="line"><span class="string">    import 'package:<span class="subst">$packageName</span>/widget/page_route_anim.dart';</span></span><br><span class="line"><span class="string">    import 'package:<span class="subst">$packageName</span>/pages/404/index.dart';</span></span><br><span class="line"><span class="string">    <span class="subst">$imports</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    class RouteName &#123;</span></span><br><span class="line"><span class="string">      <span class="subst">$routeNames</span></span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    <span class="subst">$paramsClass</span></span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    class Router &#123;</span></span><br><span class="line"><span class="string">      static Route&lt;dynamic&gt; generateRoute(RouteSettings settings) &#123;</span></span><br><span class="line"><span class="string">        switch (settings.name) &#123;</span></span><br><span class="line"><span class="string">          <span class="subst">$routeCases</span></span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">          default:</span></span><br><span class="line"><span class="string">            return PageRouteFadeBuilder(NotFount());</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    """</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/// <span class="markdown">返回路由 case 结构</span></span></span><br><span class="line">  <span class="built_in">String</span> <span class="built_in">Function</span>(<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt;, <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;&gt;) _genRouteCases = (<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt; animationList, <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;&gt; params) &#123;</span><br><span class="line">    <span class="built_in">String</span> _case = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把key按顺序排序，以固定代码格式不会乱，避免git的代码冲突严重</span></span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; keys = animationList.keys.toList();</span><br><span class="line">    keys.sort(($<span class="number">1</span>, $<span class="number">2</span>) =&gt; $<span class="number">1.</span>compareTo($<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">    keys.forEach((key) &#123;</span><br><span class="line">      <span class="built_in">String</span> value = animationList[key];</span><br><span class="line">      <span class="built_in">String</span> paramName = <span class="string">''</span>;</span><br><span class="line">      <span class="keyword">if</span> (params.containsKey(key)) &#123;</span><br><span class="line">        paramName = <span class="string">'params: settings.arguments'</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 如果有参数就默认传过去</span></span><br><span class="line">      _case += <span class="string">"""</span></span><br><span class="line"><span class="string">    case RouteName.<span class="subst">$key</span>:</span></span><br><span class="line"><span class="string">         return <span class="subst">$value</span>(<span class="subst">$key</span>(<span class="subst">$paramName</span>));</span></span><br><span class="line"><span class="string">    """</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> _case;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/// <span class="markdown">返回导入包</span></span></span><br><span class="line">  <span class="built_in">String</span> <span class="built_in">Function</span>(<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;) _genImports = (<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; importList) &#123;</span><br><span class="line">    <span class="built_in">String</span> _imports = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">    importList.forEach((v) &#123;</span><br><span class="line">      _imports += <span class="string">"<span class="subst">$v</span>;\n"</span>;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> _imports;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/// <span class="markdown">返回路由名</span></span></span><br><span class="line">  <span class="built_in">String</span> <span class="built_in">Function</span>(<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;) _genRouteNames = (<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; routeNames) &#123;</span><br><span class="line">    <span class="built_in">String</span> _field = <span class="string">""</span>;</span><br><span class="line">    routeNames.forEach((v) &#123;</span><br><span class="line">      _field += <span class="string">"static const String <span class="subst">$v</span> = '<span class="subst">$v</span>';\n"</span>;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> _field;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/// <span class="markdown">对应的 Params</span></span></span><br><span class="line">  <span class="comment">/// <span class="markdown">如果没有指定参数类型，则默认为 String</span></span></span><br><span class="line">  <span class="comment">/// <span class="markdown">&#123;</span></span></span><br><span class="line">  <span class="comment">///   <span class="markdown">"page1": ["int:a", "bool:b", "double:c", "string:e", "a"],</span></span></span><br><span class="line">  <span class="comment">///   <span class="markdown">"page2": ["int:a", "bool:b", "double:c", "string:e", "a"]</span></span></span><br><span class="line">  <span class="comment">/// <span class="markdown">&#125;</span></span></span><br><span class="line">  <span class="built_in">String</span> <span class="built_in">Function</span>(<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;&gt;) _genParamClass = (<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;&gt; params) &#123;</span><br><span class="line">    <span class="built_in">String</span> _class = <span class="string">""</span>;</span><br><span class="line">    <span class="comment">// 把key按顺序排序，以固定代码格式不会乱，避免git的代码冲突严重</span></span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; keys = params.keys.toList();</span><br><span class="line">    keys.sort((<span class="built_in">String</span> $<span class="number">1</span>, <span class="built_in">String</span> $<span class="number">2</span>) =&gt; $<span class="number">1.</span>compareTo($<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">    keys.forEach((<span class="built_in">String</span> key) &#123;</span><br><span class="line">      <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt; arr = params[key];</span><br><span class="line">      <span class="keyword">final</span> <span class="built_in">String</span> className = key + <span class="string">"Params"</span>;</span><br><span class="line"></span><br><span class="line">      <span class="built_in">String</span> _constructor = <span class="string">""</span>;</span><br><span class="line">      <span class="built_in">String</span> _field = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">      arr.forEach((v) &#123;</span><br><span class="line">        _field += <span class="string">"final <span class="subst">$&#123;v[<span class="number">1</span>]&#125;</span> <span class="subst">$&#123;v[<span class="number">0</span>]&#125;</span>;\n"</span>;</span><br><span class="line">        _constructor += <span class="string">"this.<span class="subst">$&#123;v[<span class="number">0</span>]&#125;</span>,"</span>;</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (_constructor != <span class="string">""</span>) &#123;</span><br><span class="line">        _constructor = <span class="string">"&#123;<span class="subst">$_constructor</span>&#125;"</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      _class += <span class="string">"""</span></span><br><span class="line"><span class="string">      class <span class="subst">$className</span> &#123;</span></span><br><span class="line"><span class="string">        <span class="subst">$_field</span></span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        <span class="subst">$className</span>(<span class="subst">$_constructor</span>);</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">      """</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> _class;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成最终代码及数据处理-generator-dart"><a href="#生成最终代码及数据处理-generator-dart" class="headerlink" title="生成最终代码及数据处理(generator.dart)"></a>生成最终代码及数据处理(generator.dart)</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">'package:analyzer/dart/element/element.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:build/build.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:ht_router/generate_code_template.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'package:source_gen/source_gen.dart'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./core.dart'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="markdown">获取页面参数的</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtPageGenerator</span> <span class="keyword">extends</span> <span class="title">GeneratorForAnnotation</span>&lt;<span class="title">HtPage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="comment">// 下面的都是静态成员，由于每一次都只能对一个注解做拦截</span></span><br><span class="line">  <span class="comment">// 所以拦截到一个后就往数组里添加一个</span></span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; routeList = [];</span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; importList = [];</span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt;&gt; paramsList = &#123;&#125;;</span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt; animationList = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  generateForAnnotatedElement(<span class="built_in">Element</span> element, ConstantReader annotation, BuildStep buildStep) &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">List</span> params = annotation.peek(<span class="string">'params'</span>)?.listValue;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">String</span> animation = annotation.peek(<span class="string">'animation'</span>).stringValue;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">String</span> className = element.displayName;</span><br><span class="line">    <span class="built_in">String</span> path = <span class="string">"import '<span class="subst">$&#123;buildStep.inputId.uri.toString()&#125;</span>'"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (importList.contains(path) == <span class="keyword">false</span>) &#123;</span><br><span class="line">      importList.add(path);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将route加入到map里</span></span><br><span class="line">    <span class="comment">// className 一定要唯一啊</span></span><br><span class="line">    <span class="keyword">if</span> (routeList.indexOf(className) == <span class="number">-1</span>) &#123;</span><br><span class="line">      routeList.add(className);</span><br><span class="line">      animationList[className] = animation;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (params != <span class="keyword">null</span> &amp;&amp; params.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        paramsList[className] = [];</span><br><span class="line"></span><br><span class="line">        params?.forEach((v) &#123;</span><br><span class="line">          <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; split = v.toString().split(<span class="string">":"</span>);</span><br><span class="line">          <span class="built_in">String</span> type = <span class="string">""</span>;</span><br><span class="line">          <span class="built_in">String</span> name = <span class="string">""</span>;</span><br><span class="line">          <span class="keyword">if</span> (split.length &gt; <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> Exception(<span class="string">"解析参数错误："</span> + v);</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> (split.length == <span class="number">1</span>) &#123;</span><br><span class="line">            type = <span class="string">"String"</span>;</span><br><span class="line">            name = v;</span><br><span class="line">          &#125;</span><br><span class="line">          type = split[<span class="number">0</span>].replaceFirst(<span class="string">"String ('"</span>, <span class="string">""</span>).replaceFirst(<span class="string">"')"</span>, <span class="string">""</span>);</span><br><span class="line">          name = split[<span class="number">1</span>].replaceFirst(<span class="string">"String ('"</span>, <span class="string">""</span>).replaceFirst(<span class="string">"')"</span>, <span class="string">""</span>);</span><br><span class="line">          paramsList[className].add([name, type]);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="markdown">生成路由</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtRouteGenerator</span> <span class="keyword">extends</span> <span class="title">GeneratorForAnnotation</span>&lt;<span class="title">HtRouter</span>&gt; </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  generateForAnnotatedElement(<span class="built_in">Element</span> element, ConstantReader annotation, BuildStep buildStep) &#123;</span><br><span class="line">    <span class="comment">// 进行排序，由于解析顺序每次都一定是一样的</span></span><br><span class="line">    <span class="comment">// 为了保持代码顺序一致，避免在 git 仓库里每次变动太大，导致冲突</span></span><br><span class="line">    HtPageGenerator.routeList.sort((<span class="built_in">String</span> $<span class="number">1</span>, <span class="built_in">String</span> $<span class="number">2</span>) =&gt; $<span class="number">1.</span>compareTo($<span class="number">2</span>));</span><br><span class="line">    HtPageGenerator.importList.sort((<span class="built_in">String</span> $<span class="number">1</span>, <span class="built_in">String</span> $<span class="number">2</span>) =&gt; $<span class="number">1.</span>compareTo($<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> GenerateCodeTemplate(</span><br><span class="line">      routeNames: HtPageGenerator.routeList,</span><br><span class="line">      params: HtPageGenerator.paramsList,</span><br><span class="line">      importList: HtPageGenerator.importList,</span><br><span class="line">      animationList: HtPageGenerator.animationList,</span><br><span class="line">      packageName: buildStep.inputId.package,</span><br><span class="line">    ).code();</span><br><span class="line">  &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的 <code>generateForAnnotatedElement</code> 中的 <code>element</code> 有如下属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">element.toString: class Examples</span><br><span class="line">element.name: Examples</span><br><span class="line">element.kind: CLASS</span><br><span class="line">element.displayName: Examples</span><br><span class="line">element.documentationComment: null</span><br><span class="line">element.enclosingElement: ht_router|lib/core.dart</span><br><span class="line">element.hasAlwaysThrows: false</span><br><span class="line">element.hasDeprecated: false</span><br><span class="line">element.hasFactory: false</span><br><span class="line">element.hasIsTest: false</span><br><span class="line">element.hasLiteral: false</span><br><span class="line">element.hasOverride: false</span><br><span class="line">element.hasProtected: false</span><br><span class="line">element.hasRequired: false</span><br><span class="line">element.isPrivate: false</span><br><span class="line">element.isPublic: true</span><br><span class="line">element.isSynthetic: false</span><br><span class="line">element.nameLength: 9</span><br><span class="line">element.runtimeType: ClassElementImpl</span><br></pre></td></tr></table></figure>
+<p>如果是关于构建的环境信息则在 <code>buildStep</code> 里。</p>
+<h3 id="建立-builder-dart-文件"><a href="#建立-builder-dart-文件" class="headerlink" title="建立 builder.dart 文件"></a>建立 builder.dart 文件</h3><p>在我们执行命令生成程式码的时候，我们会指定builder文件的位置，然后指令会自动根据该文件来生成代码，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import &apos;generator.dart&apos;;</span><br><span class="line">import &apos;package:build/build.dart&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;package:source_gen/source_gen.dart&apos;;</span><br><span class="line"></span><br><span class="line">Builder pageBuilder (BuilderOptions options) =&gt;</span><br><span class="line">  LibraryBuilder(HtPageGenerator(), generatedExtension: &quot;.tt.dart&quot;);</span><br><span class="line"></span><br><span class="line">Builder routerBuilder (BuilderOptions options) =&gt;</span><br><span class="line">  LibraryBuilder(HtRouteGenerator());</span><br></pre></td></tr></table></figure>
+
+<h3 id="build-yaml-的建立"><a href="#build-yaml-的建立" class="headerlink" title="build.yaml 的建立"></a>build.yaml 的建立</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">targets:</span></span><br><span class="line">  <span class="string">$default:</span></span><br><span class="line">    <span class="attr">builders:</span></span><br><span class="line">      <span class="string">ht_router|page_builder:</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="string">ht_router|router_builder:</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">builders:</span></span><br><span class="line">  <span class="attr">page_builder:</span></span><br><span class="line">    <span class="attr">import:</span> <span class="string">'package:ht_router/builder.dart'</span></span><br><span class="line">    <span class="attr">builder_factories:</span> <span class="string">['pageBuilder']</span></span><br><span class="line">    <span class="attr">build_extensions:</span> <span class="string">&#123;</span> <span class="string">'.dart'</span><span class="string">:</span> <span class="string">['.tt.dart']</span> <span class="string">&#125;</span></span><br><span class="line">    <span class="attr">auto_apply:</span> <span class="string">root_package</span></span><br><span class="line">    <span class="attr">build_to:</span> <span class="string">cache</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">router_builder:</span></span><br><span class="line">    <span class="attr">import:</span> <span class="string">'package:ht_router/builder.dart'</span></span><br><span class="line">    <span class="attr">builder_factories:</span> <span class="string">['routerBuilder']</span></span><br><span class="line">    <span class="attr">build_extensions:</span> <span class="string">&#123;</span> <span class="string">'.dart'</span><span class="string">:</span> <span class="string">['.g.dart']</span> <span class="string">&#125;</span></span><br><span class="line">    <span class="attr">auto_apply:</span> <span class="string">root_package</span></span><br><span class="line">    <span class="attr">build_to:</span> <span class="string">source</span></span><br></pre></td></tr></table></figure>
+
+<p><strong><code>到此路由框架代码就全部完毕</code></strong></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>在我们项目的 <code>pubspec.yaml</code> 文件中，添加我们写的路由框架。<br>由于路由框架只在开发的时候使用，所以添加到 <code>dev_dependencies</code> 字段里。  </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dev_dependencies:</span></span><br><span class="line">  <span class="attr">build_runner:</span></span><br><span class="line">  <span class="attr">ht_router:</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">对应的路径</span></span><br></pre></td></tr></table></figure>
+<p>具体使用方法可以见文章开头。<br>给页面写好注解后，通过命令行生成最终文件。  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner build --delete-conflicting-outputs</span><br></pre></td></tr></table></figure>
+<p>如果生成的的文件和结果不一致，建议先清除构建文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter packages pub run build_runner clean</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>上面的代码是我们的项目有深度关联，并不一定适配其他项目，仅做记录作用</code></strong><br>参考文章：<a href="https://juejin.im/post/5d1ac884f265da1bad571f3a#heading-8">掘金：Flutter 注解处理及代码生成</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Dart/" rel="tag">Dart</a>, <a class="has-link-grey -link" href="/tags/Flutter/" rel="tag">Flutter</a>, <a class="has-link-grey -link" href="/tags/%E6%8A%80%E5%B7%A7/" rel="tag">技巧</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">对文章有疑问？通过下方联系方式可以联系到我！</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wechat.png" alt="微信"></div>
+</a>
+
+                
+                
+<a class="button is-dark donate" href="https://github.com/NanShanJi" target="_blank" rel="noopener">
+    <span class="icon is-small">
+        <i class="fab fa-github"></i>
+    </span>
+    <span>github</span>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/02/13/Flutter-%E6%89%93%E5%8C%85%E5%AE%89%E5%8D%93%E9%A1%B9%E7%9B%AE/">
+                <span class="level-item">Flutter 打包安卓项目</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '26f18e9586a067f2ec69',
+        clientSecret: '2d0f56d9b138192437a066d2ba6f10bd89fe2029',
+        id: 'bf822bb7684812de4a4e6d8d187d8781',
+        repo: 'nanshanji.github.io',
+        owner: 'NanShanJi',
+        admin: "NanShanJi",
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <p class="is-size-7">
+                &copy; 2020 NanShanJi
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://yoursite.com',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
